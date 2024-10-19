@@ -2,6 +2,10 @@ name: "Build workflow"
 
 on:
   workflow_call:
+    inputs:
+      env_file:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -9,6 +13,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Load environment variables
+        run: |
+          set -a
+          source ${{ inputs.env_file }}
+          set -a
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
