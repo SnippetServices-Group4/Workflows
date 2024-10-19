@@ -6,9 +6,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GRAD_USER: ${{ secrets.GRAD_USER }}
+      GRAD_PASS: ${{ secrets.GRAD_PASS }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Create .env file
+        run: echo "${{ vars.ENV_CONTENT }}" > .env
+
+      - name: Load environment variables
+        run: |
+          set -a
+          source .env
+          set -a
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
