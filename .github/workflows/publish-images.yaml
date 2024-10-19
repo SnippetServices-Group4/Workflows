@@ -4,8 +4,9 @@ on:
   workflow_call:
     inputs:
       workflow_file_path:
-        description: "Path to the workflow file to run"
         required: true
+        type: string
+        description: "Path to the workflow file to run"
 
 jobs:
   push_to_registry:
