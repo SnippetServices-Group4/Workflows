@@ -17,7 +17,7 @@ jobs:
 
       - name: Deploy Docker Image to Azure VM
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.AZURE_VM_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.PROD_AZURE_VM_IP }} << 'EOF'
 #            echo "Logging in to GitHub Container Registry"
 #            echo ${{ secrets.GRAD_PASS }} | docker login ghcr.io -u ${{ secrets.GRAD_USER }} --password-stdin
           
