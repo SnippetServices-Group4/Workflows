@@ -37,6 +37,7 @@ jobs:
           fi
 
           ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USERNAME }}@$IP_ADDRESS << EOF
+            echo "Entering infra directory"
             cd infra
 
             echo "Log in to Docker inside the VM"
@@ -48,7 +49,9 @@ jobs:
             echo "Recreate the specific service container"
             docker-compose -f $COMPOSE_FILE up -d --no-deps ${{ inputs.service_name }}
           
-            echo "Optional: Remove any orphaned containers"
-            docker-compose -f $COMPOSE_FILE down --remove-orphans
+            echo "Remove unused resources"
+            docker system prune --volumes -f
+          
+            echo "Exiting the SSH session"
             exit
           EOF
