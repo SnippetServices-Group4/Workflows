@@ -18,11 +18,9 @@ jobs:
       - name: Deploy Docker Image to Azure VM
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.DEV_AZURE_VM_IP }} << 'EOF'
-
             echo "test command"
             touch test.txt
             echo "test" >> test.txt
-          
             echo "Exiting the SSH session"
             exit
           EOF
