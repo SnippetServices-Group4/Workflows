@@ -5,10 +5,12 @@ on:
 
 jobs:
   build:
+    name: Build project with Gradle
     runs-on: ubuntu-latest
     env:
       GRAD_USER: ${{ secrets.GRAD_USER }}
       GRAD_PASS: ${{ secrets.GRAD_PASS }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
