@@ -52,6 +52,9 @@ jobs:
             echo "Remove unused resources"
             docker system prune --volumes -f
           
+            echo "Logout from ghcr.io Docker registry"
+            docker logout ghcr.io
+          
             echo "Exiting the SSH session"
             exit
           EOF
