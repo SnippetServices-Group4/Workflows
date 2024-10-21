@@ -1,9 +1,7 @@
 name: Deploy Docker Image to Azure VM
 
 on:
-  push:
-    branches:
-      - main
+  workflow_call:
 
 jobs:
   deploy:
