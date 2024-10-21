@@ -1,24 +1,54 @@
-name: Deploy Docker Image to Azure VM
+name: Deploy Service
 
 on:
   workflow_call:
+    inputs:
+      environment:
+        description: 'Deployment Environment'
+        required: true
+        default: 'development'
+        type: string
+      service_name:
+        description: 'Service Name'
+        required: true
+        type: string
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Add SSH key to login
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Add SSH key
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.AZURE_VM_SSH_PRIVATE_KEY }}
 
-      - name: Deploy Docker Image to Azure VM
+      - name: Deploy Specific Service
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.DEV_AZURE_VM_IP }} << 'EOF'
-            echo "test command"
-            touch test.txt
-            echo "test" >> test.txt
-            echo "Exiting the SSH session"
+          if [ "${{ inputs.environment }}" == "production" ]; then
+            IP_ADDRESS=${{ secrets.PROD_AZURE_VM_IP }}
+            COMPOSE_FILE="docker-compose.prod.yml"
+          else
+            IP_ADDRESS=${{ secrets.DEV_AZURE_VM_IP }}
+            COMPOSE_FILE="docker-compose.dev.yml"
+          fi
+
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USERNAME }}@$IP_ADDRESS << EOF
+            cd infra
+
+            echo "Log in to Docker inside the VM"
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            echo "Pull the latest image for a specific service"
+            docker-compose -f $COMPOSE_FILE pull ${{ inputs.service_name }}
+          
+            echo "Recreate the specific service container"
+            docker-compose -f $COMPOSE_FILE up -d --no-deps ${{ inputs.service_name }}
+          
+            echo "Optional: Remove any orphaned containers"
+            docker-compose -f $COMPOSE_FILE down --remove-orphans
             exit
           EOF
