@@ -1,4 +1,4 @@
-name: Deploy Service
+name: "Deploy Docker Image to Azure VM workflow"
 
 on:
   workflow_call:
