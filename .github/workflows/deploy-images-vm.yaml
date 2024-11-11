@@ -48,7 +48,7 @@ jobs:
             docker-compose -f $COMPOSE_FILE pull ${{ inputs.service_name }}
           
             echo "Recreate the specific service container"
-            docker-compose -f $COMPOSE_FILE up -d --no-deps ${{ inputs.service_name }}
+            docker-compose -f $COMPOSE_FILE up -d ${{ inputs.service_name }}
           
             echo "Remove unused resources"
             docker system prune --volumes -f
