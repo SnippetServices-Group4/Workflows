@@ -51,7 +51,7 @@ jobs:
             docker-compose -f $COMPOSE_FILE up -d ${{ inputs.service_name }}
           
             echo "Remove unused resources"
-            docker system prune --volumes -f
+            # docker system prune --volumes -f
           
             echo "Logout from ghcr.io Docker registry"
             docker logout ghcr.io
