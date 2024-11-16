@@ -47,8 +47,8 @@ jobs:
             echo "Pull the latest image for a specific service"
             docker-compose -f $COMPOSE_FILE pull ${{ inputs.service_name }}
 
-            echo "Removing the specific already running container"
-            # docker-compose -f $COMPOSE_FILE rm -sf ${{ inputs.service_name }}
+            echo "Stopping the specific already running container"
+            docker stop ${{ inputs.service_name }}
           
             echo "Recreate the specific service container"
             docker-compose -f $COMPOSE_FILE up -d --no-deps ${{ inputs.service_name }}
