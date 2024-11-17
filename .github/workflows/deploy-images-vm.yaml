@@ -22,10 +22,23 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Add SSH key
+#      - name: Add SSH key
+#        uses: webfactory/ssh-agent@v0.5.3
+#        with:
+#          ssh-private-key: ${{ secrets.AZURE_VM_SSH_PRIVATE_KEY }}
+
+      - name: Add prod SSH key
+        if: ${{ inputs.environment == 'production' }}
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.AZURE_VM_SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.PROD_AZURE_VM_SSH_PRIVATE_KEY }}
+
+      - name: Add dev SSH key
+        if: ${{ inputs.environment == 'development' }}
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DEV_AZURE_VM_SSH_PRIVATE_KEY }}
+
 
       - name: Deploy Specific Service
         run: |
